@@ -8,7 +8,7 @@
         _GroundColor ("Ground Color", Color        ) = (1,1,1,1)
 		_GroundTex   ("Ground (RGB)", 2D           ) = "white" {}
 		_Splat       ("SplateMap"   , 2D           ) = "Black" {}
-		_Displacement("Displacement", Range(0, 1.0)) = 0.3
+		_Displacement("Displacement", Range(0, 10.0)) = 0.3
         _Glossiness  ("Smoothness"  , Range(0,1)   ) = 0.5
         _Metallic    ("Metallic"    , Range(0,1)   ) = 0.0
     }

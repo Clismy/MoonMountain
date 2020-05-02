@@ -11,7 +11,7 @@ public class C_drawWithMouse : MonoBehaviour
     public Shader _drawShader;
     [Range(1,500)]
     public float  _brushSize;
-    [Range(0,1)]
+    [Range(0,10)]
     public float  _brushStrenght;
 
 
