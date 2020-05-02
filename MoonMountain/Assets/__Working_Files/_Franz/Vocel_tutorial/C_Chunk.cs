@@ -4,6 +4,20 @@ using UnityEngine;
 
 public class C_Chunk : MonoBehaviour
 {
+
+
+    public bool update;
+
+    public int chunkSize = 16;
+    public GameObject worldGO;
+    private C_World world;
+
+
+    public int chunkX;
+    public int chunkY;
+    public int chunkZ;
+
+
     private List<Vector3> newVertices = new List<Vector3>();
     private List<int> newTriangles = new List<int>();
     private List<Vector2> newUV = new List<Vector2>();
@@ -17,21 +31,19 @@ public class C_Chunk : MonoBehaviour
 
     private int faceCount;
 
+    private Vector2 tGrassTop = new Vector2(1, 1);
+
     private void Start()
     {
-        mesh = GetComponent<MeshFilter>().mesh;
-        col = GetComponent<MeshCollider>();
+        mesh  = GetComponent<MeshFilter>().mesh;
+        col   = GetComponent<MeshCollider>();
+        world = worldGO.GetComponent("C_World") as C_World;
 
-        CubeTop  (0, 0, 0, 0);
-        CubeNorth(0, 0, 0, 0);
-        CubeEast (0, 0, 0, 0);
-        CubeSouth(0, 0, 0, 0);
-        CubeWest (0, 0, 0, 0);
-        CubeBot  (0, 0, 0, 0);
+        GenerateMesh();
 
 
 
-        UpdateMesh();
+  
     }
 
 
@@ -53,8 +65,16 @@ public class C_Chunk : MonoBehaviour
         faceCount++; // Add this line
     }
 
-   
 
+  
+    void LateUpdate()
+    {
+        if (update)
+        {
+            GenerateMesh();
+            update = false;
+        }
+    }
 
     void UpdateMesh()
     {
@@ -85,9 +105,17 @@ public class C_Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x + 1, y, z));
         newVertices.Add(new Vector3(x, y, z));
 
-        Vector2 texturePos;
 
-        texturePos = tStone;
+        Vector2 texturePos = new Vector2(0, 0);
+
+        if (Block(x, y, z) == 1)
+        {
+            texturePos = tStone;
+        }
+        else if (Block(x, y, z) == 2)
+        {
+            texturePos = tGrassTop;
+        }
 
         Cube(texturePos);
 
@@ -103,7 +131,14 @@ public class C_Chunk : MonoBehaviour
         Vector2 texturePos;
 
         texturePos = tStone;
-
+        if (Block(x, y, z) == 1)
+        {
+            texturePos = tStone;
+        }
+        else if (Block(x, y, z) == 2)
+        {
+            texturePos = tGrass;
+        }
         Cube(texturePos);
 
     }
@@ -118,6 +153,15 @@ public class C_Chunk : MonoBehaviour
         Vector2 texturePos;
 
         texturePos = tStone;
+        if (Block(x, y, z) == 1)
+        {
+            texturePos = tStone;
+        }
+        else if (Block(x, y, z) == 2)
+        {
+            texturePos = tGrass;
+        }
+       
 
         Cube(texturePos);
 
@@ -133,7 +177,15 @@ public class C_Chunk : MonoBehaviour
         Vector2 texturePos;
 
         texturePos = tStone;
-
+        if (Block(x, y, z) == 1)
+        {
+            texturePos = tStone;
+        }
+        else if (Block(x, y, z) == 2)
+        {
+            texturePos = tGrass;
+        }
+    
         Cube(texturePos);
 
     }
@@ -148,6 +200,14 @@ public class C_Chunk : MonoBehaviour
         Vector2 texturePos;
 
         texturePos = tStone;
+        if (Block(x, y, z) == 1)
+        {
+            texturePos = tStone;
+        }
+        else if (Block(x, y, z) == 2)
+        {
+            texturePos = tGrass;
+        }
 
         Cube(texturePos);
 
@@ -166,6 +226,76 @@ public class C_Chunk : MonoBehaviour
 
         Cube(texturePos);
 
+    }
+
+    byte Block(int x, int y, int z)
+    {
+        return world.Block(x + chunkX, y + chunkY, z + chunkZ); // Don't replace the Block in this line!
+    }
+
+    public void GenerateMesh()
+    {
+
+        for (int x = 0; x < chunkSize; x++)
+        {
+            for (int y = 0; y < chunkSize; y++)
+            {
+                for (int z = 0; z < chunkSize; z++)
+                {
+                    //This code will run for every block in the chunk
+
+                    if (Block(x, y, z) != 0)
+                    {
+                        //If the block is solid
+
+                        if (Block(x, y + 1, z) == 0)
+                        {
+                            //Block above is air
+                            CubeTop(x, y, z, Block(x, y, z));
+                        }
+
+                        if (Block(x, y - 1, z) == 0)
+                        {
+                            //Block below is air
+                            CubeBot(x, y, z, Block(x, y, z));
+
+                        }
+
+                        if (Block(x + 1, y, z) == 0)
+                        {
+                            //Block east is air
+                            CubeEast(x, y, z, Block(x, y, z));
+
+                        }
+
+                        if (Block(x - 1, y, z) == 0)
+                        {
+                            //Block west is air
+                            CubeWest(x, y, z, Block(x, y, z));
+
+                        }
+
+                        if (Block(x, y, z + 1) == 0)
+                        {
+                            //Block north is air
+                            CubeNorth(x, y, z, Block(x, y, z));
+
+                        }
+
+                        if (Block(x, y, z - 1) == 0)
+                        {
+                            //Block south is air
+                            CubeSouth(x, y, z, Block(x, y, z));
+
+                        }
+
+                    }
+
+                }
+            }
+        }
+
+        UpdateMesh();
     }
 
 }
