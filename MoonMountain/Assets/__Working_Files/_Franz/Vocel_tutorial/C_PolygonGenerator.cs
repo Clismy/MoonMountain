@@ -26,9 +26,9 @@ public class C_PolygonGenerator : MonoBehaviour
     private MeshCollider col;
 
 
+    public bool update = false;
 
 
-    
 
 
     // Use this for initialization
@@ -40,6 +40,15 @@ public class C_PolygonGenerator : MonoBehaviour
         GenTerrain();
         BuildMesh();
         UpdateMesh();
+    }
+    void Update()
+    {
+        if (update)
+        {
+            BuildMesh();
+            UpdateMesh();
+            update = false;
+        }
     }
 
     void GenTerrain()
