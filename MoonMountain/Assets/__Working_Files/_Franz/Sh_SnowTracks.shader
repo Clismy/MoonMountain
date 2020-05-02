@@ -1,4 +1,4 @@
-﻿Shader "Custom/SnowTracks"
+﻿Shader "Custom/Sh_SnowTracks"
 {
     Properties
     {
