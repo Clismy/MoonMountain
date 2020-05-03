@@ -76,7 +76,9 @@
         {
 
 			half amount = tex2Dlod(_Splat, float4(IN.uv_Splat, 0, 0)).r;
+
 			fixed4 c    = lerp(tex2D(_SnowTex, IN.uv_SnowTex) * _SnowColor, tex2D(_GroundTex, IN.uv_GroundTex) * _GroundColor,amount);
+
             // Albedo comes from a texture tinted by color
           //  fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
             o.Albedo = c.rgb;

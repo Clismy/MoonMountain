@@ -5,10 +5,14 @@ using UnityEngine;
 public class C_Chunk : MonoBehaviour
 {
 
+    public Material baseMaterial;
 
+
+    public Shader snow_tack_shader;
     public bool update;
 
-    public int chunkSize = 16;
+    public float chunkSize = 0.5f;
+   // public int chunkSize = 16;
     public GameObject worldGO;
     private C_World world;
 
@@ -16,6 +20,9 @@ public class C_Chunk : MonoBehaviour
     public int chunkX;
     public int chunkY;
     public int chunkZ;
+
+
+
 
 
     private List<Vector3> newVertices = new List<Vector3>();
@@ -33,42 +40,98 @@ public class C_Chunk : MonoBehaviour
 
     private Vector2 tGrassTop = new Vector2(1, 1);
 
-    private void Start()
+
+
+
+    public RenderTexture _splatmap;
+    public RenderTexture getSetSplatMap
     {
-        mesh  = GetComponent<MeshFilter>().mesh;
-        col   = GetComponent<MeshCollider>();
-        world = worldGO.GetComponent("C_World") as C_World;
+        get
+        {
+            if (_splatmap == null)
+                _splatmap = new RenderTexture(1024, 1024, 0, RenderTextureFormat.ARGBFloat);
+            
+            return _splatmap;
+        }
+        set { _splatmap = value; }
+    }
 
-        GenerateMesh();
 
+    void Start()
+    {
+
+
+        mesh = GetComponent<MeshFilter>().mesh;
+        col = GetComponent<MeshCollider>();
+        //  world = worldGO.GetComponent("C_World") as C_World;
+
+        GeneretNewMaterial();
+
+
+        
+
+        ////  GenerateMesh();
+        //float xs = 0;
+        //for (int x = 0; x < chunkX; x++, xs += chunkSize)
+        //{
+        //    float ys = 0;
+        //    for (int y = 0; y < chunkY; y++, ys += chunkSize)
+        //    {
+        //        float zs = 0;
+        //        for (int z = 0; z < chunkZ; z++, zs += chunkSize)
+        //        {
+
+        //            float wxs =  xs;//transform.position.x +
+        //            float wys =  ys;//transform.position.y +
+        //            float wzs =  zs;//transform.position.z +
+
+
+        //            CubeTop  (wxs, wys, wzs);
+        //          //  CubeBot  (wxs, wys, wzs);
+        //          //  CubeEast (wxs, wys, wzs);
+        //          //  CubeWest (wxs, wys, wzs);
+        //          //  CubeNorth(wxs, wys, wzs);
+        //          //  CubeSouth(wxs, wys, wzs);
+
+
+
+
+        //        }
+        //    }
+        //}
+
+        //UpdateMesh2();
+    }
+
+    
+    public void GeneretNewMaterial()
+    {
+        GetComponent<MeshRenderer>().material = null;
+        Material newMat = new Material(snow_tack_shader);
+
+        newMat.SetFloat  ("_Tess"        , baseMaterial.GetFloat("_Tess"));
+        newMat.SetColor  ("_SnowColor"   , baseMaterial.GetColor("_SnowColor"));
+        newMat.SetTexture("_SnowTex"     , baseMaterial.GetTexture("_SnowTex"));
+        newMat.SetColor  ("_GroundColor" , baseMaterial.GetColor("_GroundColor"));
+        newMat.SetTexture("_GroundTex"   , baseMaterial.GetTexture("_GroundTex"));
+        newMat.SetTexture("_Splat"       , _splatmap = new RenderTexture(1024, 1024, 0, RenderTextureFormat.ARGBFloat));
+        newMat.SetFloat  ("_Displacement", baseMaterial.GetFloat("_Displacement"));
+        newMat.SetFloat  ("_Glossiness"  , baseMaterial.GetFloat("_Glossiness"));
+        newMat.SetFloat  ("_Metallic"    , baseMaterial.GetFloat("_Metallic"));
+
+
+
+
+        GetComponent<MeshRenderer>().material = newMat;//
+    }
 
 
   
-    }
-
-
-    void Cube(Vector2 texturePos)
-    {
-
-        newTriangles.Add(faceCount * 4); //1
-        newTriangles.Add(faceCount * 4 + 1); //2
-        newTriangles.Add(faceCount * 4 + 2); //3
-        newTriangles.Add(faceCount * 4); //1
-        newTriangles.Add(faceCount * 4 + 2); //3
-        newTriangles.Add(faceCount * 4 + 3); //4
-
-        newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y));
-        newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y + tUnit));
-        newUV.Add(new Vector2(tUnit * texturePos.x, tUnit * texturePos.y + tUnit));
-        newUV.Add(new Vector2(tUnit * texturePos.x, tUnit * texturePos.y));
-
-        faceCount++; // Add this line
-    }
-
-
   
     void LateUpdate()
     {
+
+
         if (update)
         {
             GenerateMesh();
@@ -78,7 +141,6 @@ public class C_Chunk : MonoBehaviour
 
     void UpdateMesh()
     {
-
         mesh.Clear();
         mesh.vertices = newVertices.ToArray();
         mesh.uv = newUV.ToArray();
@@ -227,6 +289,138 @@ public class C_Chunk : MonoBehaviour
         Cube(texturePos);
 
     }
+
+    void Cube(Vector2 texturePos)
+    {
+
+        newTriangles.Add(faceCount * 4); //1
+        newTriangles.Add(faceCount * 4 + 1); //2
+        newTriangles.Add(faceCount * 4 + 2); //3
+        newTriangles.Add(faceCount * 4); //1
+        newTriangles.Add(faceCount * 4 + 2); //3
+        newTriangles.Add(faceCount * 4 + 3); //4
+
+        newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y));
+        newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y + tUnit));
+        newUV.Add(new Vector2(tUnit * texturePos.x, tUnit * texturePos.y + tUnit));
+        newUV.Add(new Vector2(tUnit * texturePos.x, tUnit * texturePos.y));
+
+        faceCount++; // Add this line
+    }
+
+
+    void UpdateMesh2()
+    {
+        mesh.Clear();
+        mesh.vertices = newVertices.ToArray();
+
+        //int length = mesh.vertices.Length;
+        //Vector2[] uvs = new Vector2[length];
+        //for(int i = 0; i< length; i++)
+        //    uvs[i] = new Vector2(mesh.vertices[i].x, mesh.vertices[i].z);
+
+        mesh.uv = newUV.ToArray(); 
+
+
+        mesh.triangles = newTriangles.ToArray();
+        mesh.Optimize();
+        mesh.RecalculateNormals();
+
+        col.sharedMesh = null;
+        col.sharedMesh = mesh;
+
+        newVertices.Clear();
+        newUV.Clear();
+        newTriangles.Clear();
+
+        faceCount = 0; //Fixed: Added this thanks to a bug pointed out by ratnushock!
+
+    }
+
+    void CubeTop  (float x, float y, float z)
+    {
+        newVertices.Add(new Vector3(x, y, z + 1));
+        newVertices.Add(new Vector3(x + 1, y, z + 1));
+        newVertices.Add(new Vector3(x + 1, y, z));
+        newVertices.Add(new Vector3(x, y, z));
+
+        newUV.Add(new Vector2( x , y));
+        newUV.Add(new Vector2( x , y));
+        newUV.Add(new Vector2( x , y));
+        newUV.Add(new Vector2( x , y));
+        //newUV.Add(new Vector2(tUnit * x + tUnit, tUnit * z));
+        //newUV.Add(new Vector2(tUnit * x + tUnit, tUnit * z + tUnit));
+        //newUV.Add(new Vector2(tUnit * x, tUnit * z + tUnit));
+        //newUV.Add(new Vector2(tUnit * x, tUnit * z));
+
+        newTriangles.Add(faceCount); //1
+        newTriangles.Add(faceCount + 1); //2
+        newTriangles.Add(faceCount + 2); //3
+        newTriangles.Add(faceCount); //1
+        newTriangles.Add(faceCount + 2); //3
+        newTriangles.Add(faceCount + 3); //4
+
+
+
+        faceCount++; // Add this line
+    }
+    //void CubeNorth(float x, float y, float z)
+    //{
+    //    newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
+    //    newVertices.Add(new Vector3(x + 1, y, z + 1));
+    //    newVertices.Add(new Vector3(x, y, z + 1));
+    //    newVertices.Add(new Vector3(x, y - 1, z + 1));
+    //    Cube();
+    //}
+    //void CubeEast (float x, float y, float z)
+    //{
+    //    newVertices.Add(new Vector3(x + 1, y - 1, z));
+    //    newVertices.Add(new Vector3(x + 1, y, z));
+    //    newVertices.Add(new Vector3(x + 1, y, z + 1));
+    //    newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
+    //    Cube();
+    //}
+    //void CubeSouth(float x, float y, float z)
+    //{
+    //    newVertices.Add(new Vector3(x, y - 1, z));
+    //    newVertices.Add(new Vector3(x, y, z));
+    //    newVertices.Add(new Vector3(x + 1, y, z));
+    //    newVertices.Add(new Vector3(x + 1, y - 1, z));
+    //    Cube();
+    //}
+    //void CubeWest (float x, float y, float z)
+    //{
+    //    newVertices.Add(new Vector3(x, y - 1, z + 1));
+    //    newVertices.Add(new Vector3(x, y, z + 1));
+    //    newVertices.Add(new Vector3(x, y, z));
+    //    newVertices.Add(new Vector3(x, y - 1, z));
+    //    Cube();
+    //}
+    //void CubeBot  (float x, float y, float z)
+    //{
+    //    newVertices.Add(new Vector3(x, y - 1, z));
+    //    newVertices.Add(new Vector3(x + 1, y - 1, z));
+    //    newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
+    //    newVertices.Add(new Vector3(x, y - 1, z + 1));
+    //    Cube();
+    //}
+    //void Cube()
+    //{
+
+    //    newTriangles.Add(faceCount ); //1
+    //    newTriangles.Add(faceCount  + 1); //2
+    //    newTriangles.Add(faceCount  + 2); //3
+    //    newTriangles.Add(faceCount ); //1
+    //    newTriangles.Add(faceCount  + 2); //3
+    //    newTriangles.Add(faceCount  + 3); //4
+
+
+
+    //    faceCount++; // Add this line
+    //}
+
+
+
 
     byte Block(int x, int y, int z)
     {
