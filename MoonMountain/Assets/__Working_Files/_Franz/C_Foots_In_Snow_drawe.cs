@@ -5,7 +5,8 @@ using UnityEngine;
 public class C_Foots_In_Snow_drawe : MonoBehaviour
 {
     //  public GameObject  _terrain;
-    public C_Chungk2 Curent_terrain;
+    public C_Chungk2 walk_Curent_terrain;
+    public C_Chungk2 draw_Curent_terrain;
     public Transform[] _wheel;
     public Shader _drawShader;
     [Range(1, 500)]
@@ -17,8 +18,9 @@ public class C_Foots_In_Snow_drawe : MonoBehaviour
     private int _layermask;
     private Material _snowMaterial;
     private Material _drawMaterial;
-    public RenderTexture _splatmap;
-
+    public RenderTexture walk_splatmap;
+    public RenderTexture draw_splatmap;
+    private Camera _camera;
     void Start()
     {
         _layermask = LayerMask.GetMask("SnowFloor");
@@ -29,29 +31,36 @@ public class C_Foots_In_Snow_drawe : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        for (int i = 0, lengt = _wheel.Length; i < lengt; i++)
+
+
+        if (Input.GetKey(KeyCode.Mouse0))
         {
-            if (Physics.Raycast(_wheel[i].position, -Vector3.up, out _hit, 1f, _layermask))
+            if (_camera == null)
+                _camera = Camera.main;
+
+
+            if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out _hit))
             {
 
-                if (Curent_terrain == null)
+
+                if (draw_Curent_terrain == null)
                 {
-                    Curent_terrain = _hit.transform.gameObject.GetComponent("C_Chungk2") as C_Chungk2;
+                    draw_Curent_terrain = _hit.transform.gameObject.GetComponent("C_Chungk2") as C_Chungk2;
                     _snowMaterial = _hit.transform.gameObject.GetComponent<MeshRenderer>().material;
-                    _snowMaterial.SetTexture("_Splat", Curent_terrain.getSetSplatMap);
-                    _splatmap = Curent_terrain.getSetSplatMap;
+                    _snowMaterial.SetTexture("_Splat", draw_Curent_terrain.getSetSplatMap);
+                    draw_splatmap = draw_Curent_terrain.getSetSplatMap;
 
                 }
-                else if (Curent_terrain.gameObject != _hit.transform.gameObject)
+                else if (draw_Curent_terrain.gameObject != _hit.transform.gameObject)
                 {
 
-                    Curent_terrain.getSetSplatMap = _splatmap;
+                    draw_Curent_terrain.getSetSplatMap = draw_splatmap;
 
 
-                    Curent_terrain = _hit.transform.gameObject.GetComponent("C_Chungk2") as C_Chungk2;
-                    _snowMaterial = Curent_terrain.gameObject.GetComponent<MeshRenderer>().material;
-                    _snowMaterial.SetTexture("_Splat", Curent_terrain.getSetSplatMap);
-                    _splatmap = Curent_terrain.getSetSplatMap;
+                    draw_Curent_terrain = _hit.transform.gameObject.GetComponent("C_Chungk2") as C_Chungk2;
+                    _snowMaterial = draw_Curent_terrain.gameObject.GetComponent<MeshRenderer>().material;
+                    _snowMaterial.SetTexture("_Splat", draw_Curent_terrain.getSetSplatMap);
+                    draw_splatmap = draw_Curent_terrain.getSetSplatMap;
                 }
 
                 _drawMaterial.SetVector("_Coordinate", new Vector4(_hit.textureCoord.x, _hit.textureCoord.y, 0, 0));
@@ -59,9 +68,52 @@ public class C_Foots_In_Snow_drawe : MonoBehaviour
                 _drawMaterial.SetFloat("_Size", _brushSize);
 
 
-                RenderTexture temp = RenderTexture.GetTemporary(_splatmap.width, _splatmap.height, 0, RenderTextureFormat.ARGBFloat);
-                Graphics.Blit(_splatmap, temp);
-                Graphics.Blit(temp, _splatmap, _drawMaterial);
+                RenderTexture temp = RenderTexture.GetTemporary(draw_splatmap.width, draw_splatmap.height, 0, RenderTextureFormat.ARGBFloat);
+                Graphics.Blit(draw_splatmap, temp);
+                Graphics.Blit(temp, draw_splatmap, _drawMaterial);
+                RenderTexture.ReleaseTemporary(temp);
+            }
+        }
+
+
+
+
+
+
+
+        for (int i = 0, lengt = _wheel.Length; i < lengt; i++)
+        {
+            if (Physics.Raycast(_wheel[i].position, -Vector3.up, out _hit, 1f, _layermask))
+            {
+
+                if (walk_Curent_terrain == null)
+                {
+                    walk_Curent_terrain = _hit.transform.gameObject.GetComponent("C_Chungk2") as C_Chungk2;
+                    _snowMaterial = _hit.transform.gameObject.GetComponent<MeshRenderer>().material;
+                    _snowMaterial.SetTexture("_Splat", walk_Curent_terrain.getSetSplatMap);
+                    walk_splatmap = walk_Curent_terrain.getSetSplatMap;
+
+                }
+                else if (walk_Curent_terrain.gameObject != _hit.transform.gameObject)
+                {
+
+                    walk_Curent_terrain.getSetSplatMap = walk_splatmap;
+
+
+                    walk_Curent_terrain = _hit.transform.gameObject.GetComponent("C_Chungk2") as C_Chungk2;
+                    _snowMaterial = walk_Curent_terrain.gameObject.GetComponent<MeshRenderer>().material;
+                    _snowMaterial.SetTexture("_Splat", walk_Curent_terrain.getSetSplatMap);
+                    walk_splatmap = walk_Curent_terrain.getSetSplatMap;
+                }
+
+                _drawMaterial.SetVector("_Coordinate", new Vector4(_hit.textureCoord.x, _hit.textureCoord.y, 0, 0));
+                _drawMaterial.SetFloat("_Strenght", _brushStrenght);
+                _drawMaterial.SetFloat("_Size", _brushSize);
+
+
+                RenderTexture temp = RenderTexture.GetTemporary(walk_splatmap.width, walk_splatmap.height, 0, RenderTextureFormat.ARGBFloat);
+                Graphics.Blit(walk_splatmap, temp);
+                Graphics.Blit(temp, walk_splatmap, _drawMaterial);
                 RenderTexture.ReleaseTemporary(temp);
 
             }
@@ -74,7 +126,10 @@ public class C_Foots_In_Snow_drawe : MonoBehaviour
 
     private void OnGUI()
     {
-        if (_splatmap != null)
-            GUI.DrawTexture(new Rect(0, 0, 256, 256), _splatmap, ScaleMode.ScaleToFit, false, 1);
+        if (walk_splatmap != null)
+            GUI.DrawTexture(new Rect(0, 0, 256, 256), walk_splatmap, ScaleMode.ScaleToFit, false, 1);
+
+        if (draw_splatmap != null)
+            GUI.DrawTexture(new Rect(512, 0, 256, 256), draw_splatmap, ScaleMode.ScaleToFit, false, 1);
     }
 }

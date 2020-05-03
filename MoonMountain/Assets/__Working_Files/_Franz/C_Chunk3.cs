@@ -2,19 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class C_Chunk : MonoBehaviour
+public class C_Chunk3 : MonoBehaviour
 {
 
-    public Material baseMaterial;
-
-
-    public Shader snow_tack_shader;
+       
     public bool update;
 
     public float chunkSize = 0.5f;
-   // public int chunkSize = 16;
-    public GameObject worldGO;
-    private C_World world;
+    // public int chunkSize = 16;
+    public GameObject snoPileGo;
+    private C_SnowPile snowPile;
 
 
     public int chunkX;
@@ -39,8 +36,7 @@ public class C_Chunk : MonoBehaviour
     private int faceCount;
 
     private Vector2 tGrassTop = new Vector2(1, 1);
-
-  
+   
 
     void Start()
     {
@@ -48,17 +44,14 @@ public class C_Chunk : MonoBehaviour
 
         mesh = GetComponent<MeshFilter>().mesh;
         col = GetComponent<MeshCollider>();
-          world = worldGO.GetComponent("C_World") as C_World;
+        snowPile = snoPileGo.GetComponent("C_SnowPile") as C_SnowPile;
 
-
-
-        
 
         GenerateMesh();
-     
+
     }
 
-    
+
     void LateUpdate()
     {
 
@@ -79,8 +72,8 @@ public class C_Chunk : MonoBehaviour
         mesh.Optimize();
         mesh.RecalculateNormals();
 
-        col.sharedMesh=null;
-        col.sharedMesh=mesh;
+        col.sharedMesh = null;
+        col.sharedMesh = mesh;
 
         newVertices.Clear();
         newUV.Clear();
@@ -90,7 +83,7 @@ public class C_Chunk : MonoBehaviour
 
     }
 
-    void CubeTop  (int x, int y, int z, byte block)
+    void CubeTop(int x, int y, int z, byte block)
     {
 
         newVertices.Add(new Vector3(x, y, z + 1));
@@ -135,7 +128,7 @@ public class C_Chunk : MonoBehaviour
         Cube(texturePos);
 
     }
-    void CubeEast (int x, int y, int z, byte block)
+    void CubeEast(int x, int y, int z, byte block)
     {
 
         newVertices.Add(new Vector3(x + 1, y - 1, z));
@@ -154,7 +147,7 @@ public class C_Chunk : MonoBehaviour
         {
             texturePos = tGrass;
         }
-       
+
 
         Cube(texturePos);
 
@@ -178,11 +171,11 @@ public class C_Chunk : MonoBehaviour
         {
             texturePos = tGrass;
         }
-    
+
         Cube(texturePos);
 
     }
-    void CubeWest (int x, int y, int z, byte block)
+    void CubeWest(int x, int y, int z, byte block)
     {
 
         newVertices.Add(new Vector3(x, y - 1, z + 1));
@@ -205,7 +198,7 @@ public class C_Chunk : MonoBehaviour
         Cube(texturePos);
 
     }
-    void CubeBot  (int x, int y, int z, byte block)
+    void CubeBot(int x, int y, int z, byte block)
     {
 
         newVertices.Add(new Vector3(x, y - 1, z));
@@ -240,68 +233,99 @@ public class C_Chunk : MonoBehaviour
     }
 
 
-  
+
 
     byte Block(int x, int y, int z)
     {
-        return world.Block(x + chunkX, y + chunkY, z + chunkZ); // Don't replace the Block in this line!
+        return snowPile.Block(x + chunkX, y + chunkY, z + chunkZ); // Don't replace the Block in this line!
     }
 
     public void GenerateMesh()
     {
-
+       Vector3 transfo =  snoPileGo.transform.position;
         for (int x = 0; x < chunkSize; x++)
         {
             for (int y = 0; y < chunkSize; y++)
             {
                 for (int z = 0; z < chunkSize; z++)
                 {
+                    ////This code will run for every block in the chunk
+
+                    //if (Block(x, y, z) != 0)
+                    //{
+                    //    //If the block is solid
+
+                    //    if (Block(x, y + 1, z) == 0)
+                    //    {
+                    //        //Block above is air
+                    //        CubeTop(x, y, z, Block(x, y, z));
+                    //    }
+
+                    //    if (Block(x, y - 1, z) == 0)
+                    //    {
+                    //        //Block below is air
+                    //        CubeBot(x, y, z, Block(x, y, z));
+
+                    //    }
+
+                    //    if (Block(x + 1, y, z) == 0)
+                    //    {
+                    //        //Block east is air
+                    //        CubeEast(x, y, z, Block(x, y, z));
+
+                    //    }
+
+                    //    if (Block(x - 1, y, z) == 0)
+                    //    {
+                    //        //Block west is air
+                    //        CubeWest(x, y, z, Block(x, y, z));
+
+                    //    }
+
+                    //    if (Block(x, y, z + 1) == 0)
+                    //    {
+                    //        //Block north is air
+                    //        CubeNorth(x, y, z, Block(x, y, z));
+
+                    //    }
+
+                    //    if (Block(x, y, z - 1) == 0)
+                    //    {
+                    //        //Block south is air
+                    //        CubeSouth(x, y, z, Block(x, y, z));
+
+                    //    }
+
+                    //}
                     //This code will run for every block in the chunk
 
                     if (Block(x, y, z) != 0)
                     {
                         //If the block is solid
 
-                        if (Block(x, y + 1, z) == 0)
-                        {
+                     
                             //Block above is air
                             CubeTop(x, y, z, Block(x, y, z));
-                        }
-
-                        if (Block(x, y - 1, z) == 0)
-                        {
+                       
                             //Block below is air
                             CubeBot(x, y, z, Block(x, y, z));
-
-                        }
-
-                        if (Block(x + 1, y, z) == 0)
-                        {
+                        
                             //Block east is air
                             CubeEast(x, y, z, Block(x, y, z));
 
-                        }
-
-                        if (Block(x - 1, y, z) == 0)
-                        {
+                       
                             //Block west is air
                             CubeWest(x, y, z, Block(x, y, z));
 
-                        }
-
-                        if (Block(x, y, z + 1) == 0)
-                        {
+                       
                             //Block north is air
                             CubeNorth(x, y, z, Block(x, y, z));
 
-                        }
-
-                        if (Block(x, y, z - 1) == 0)
-                        {
+                        
                             //Block south is air
                             CubeSouth(x, y, z, Block(x, y, z));
 
-                        }
+                        
 
                     }
 

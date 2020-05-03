@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class C_World : MonoBehaviour
+public class C_SnowPile : MonoBehaviour
 {
     public byte[,,] data;
     public int worldX = 16;
@@ -10,8 +10,9 @@ public class C_World : MonoBehaviour
     public int worldZ = 16;
 
     public GameObject chunk;
-    public C_Chunk[,,] chunks;  //Changed from public GameObject[,,] chunks;
+    public C_Chunk3[,,] chunks;  //Changed from public GameObject[,,] chunks;
     public int chunkSize = 16;
+
     public int chungL;
     public int datraL;
     void Start()
@@ -28,24 +29,21 @@ public class C_World : MonoBehaviour
                 int stone = PerlinNoise(x, 0, z, 10, 3, 1.2f);
                 stone += PerlinNoise(x, 300, z, 20, 4, 0) + 10;
                 int dirt = PerlinNoise(x, 100, z, 50, 2, 0) + 1; //Added +1 to make sure minimum grass height is 1
-
+                stone = 0;
                 for (int y = 0; y < worldY; y++)
                 {
-                    if (y <= stone)
-                    {
-                        data[x, y, z] = 1;
-                    }
-                    else if (y <= dirt + stone)
-                    { //Changed this line thanks to a comment
-                        data[x, y, z] = 2;
-                    }
+                    //if (y <= stone)
+                    //{
+                    //    data[x, y, z] = 1;
+                    //}
+                    data[x, y, z] = 1;
 
                 }
             }
         }
 
 
-        chunks = new C_Chunk[Mathf.FloorToInt(worldX / chunkSize),
+        chunks = new C_Chunk3[Mathf.FloorToInt(worldX / chunkSize),
         Mathf.FloorToInt(worldY / chunkSize), Mathf.FloorToInt(worldZ / chunkSize)];
 
         for (int x = 0; x < chunks.GetLength(0); x++)
@@ -54,15 +52,16 @@ public class C_World : MonoBehaviour
             {
                 for (int z = 0; z < chunks.GetLength(2); z++)
                 {
-
+                    
                     //Create a temporary Gameobject for the new chunk instead of using chunks[x,y,z]
-                    GameObject newChunk = Instantiate(chunk, new Vector3(x * chunkSize - 0.5f,
-                     y * chunkSize + 0.5f, z * chunkSize - 0.5f), new Quaternion(0, 0, 0, 0)) as GameObject;
+                    GameObject newChunk = Instantiate(chunk, new Vector3(x * chunkSize - 0.5f + transform.position.x,
+                                                                         y * chunkSize + 0.5f+ transform.position.y , 
+                                                                         z * chunkSize - 0.5f+ transform.position.z ), new Quaternion(0, 0, 0, 0),transform) as GameObject;
 
                     //Now instead of using a temporary variable for the script assign it
                     //to chunks[x,y,z] and use it instead of the old \"newChunkScript\" 
-                    chunks[x, y, z] = newChunk.GetComponent("C_Chunk") as C_Chunk;
-                    chunks[x, y, z].worldGO = gameObject;
+                    chunks[x, y, z] = newChunk.GetComponent("C_Chunk3") as C_Chunk3;
+                    chunks[x, y, z].snoPileGo = gameObject;
                     chunks[x, y, z].chunkSize = chunkSize;
                     chunks[x, y, z].chunkX = x * chunkSize;
                     chunks[x, y, z].chunkY = y * chunkSize;
@@ -109,26 +108,27 @@ public class C_World : MonoBehaviour
 
     public void GenColumn(int x, int z)
     {
-     
-            for (int y = 0; y < chunks.GetLength(1); y++)
-            {
-                
 
-                    //Create a temporary Gameobject for the new chunk instead of using chunks[x,y,z]
-                    GameObject newChunk = Instantiate(chunk, new Vector3(x * chunkSize - 0.5f,
-                    y * chunkSize + 0.5f, z * chunkSize - 0.5f), new Quaternion(0, 0, 0, 0)) as GameObject;
+        for (int y = 0; y < chunks.GetLength(1); y++)
+        {
 
-                    chunks[x, y, z] = newChunk.GetComponent("C_Chunk") as C_Chunk;
-                 
-                    chunks[x, y, z].worldGO = gameObject;
-                    chunks[x, y, z].chunkSize = chunkSize;
-                    chunks[x, y, z].chunkX = x * chunkSize;
-                    chunks[x, y, z].chunkY = y * chunkSize;
-                    chunks[x, y, z].chunkZ = z * chunkSize;
 
-                
-            }
-        
+            //Create a temporary Gameobject for the new chunk instead of using chunks[x,y,z]
+            GameObject newChunk = Instantiate(chunk, new Vector3(x * chunkSize - 0.5f + transform.position.x,
+                                                                 y * chunkSize + 0.5f+ transform.position.y , 
+                                                                 z * chunkSize - 0.5f + transform.position.z), new Quaternion(0, 0, 0, 0), transform) as GameObject;
+
+            chunks[x, y, z] = newChunk.GetComponent("C_Chunk3") as C_Chunk3;
+
+            chunks[x, y, z].snoPileGo = gameObject;
+            chunks[x, y, z].chunkSize = chunkSize;
+            chunks[x, y, z].chunkX = x * chunkSize;
+            chunks[x, y, z].chunkY = y * chunkSize;
+            chunks[x, y, z].chunkZ = z * chunkSize;
+
+
+        }
+
     }
 
     public void UnloadColumn(int x, int z)
@@ -142,7 +142,16 @@ public class C_World : MonoBehaviour
 
 
 
+    private void OnDrawGizmos()
+    {
+        float centerX = transform.position.x -chunkSize* 0.38f;
+        float centerY = transform.position.y -chunkSize *0.5f;
+        float centerZ = transform.position.z -chunkSize * 0.38f;
 
+
+
+        Gizmos.DrawWireCube(new Vector3(centerX, centerY, centerZ), new Vector3(worldX, worldY, worldZ) * chunkSize* 0.25f);
+    }
 
 
 
