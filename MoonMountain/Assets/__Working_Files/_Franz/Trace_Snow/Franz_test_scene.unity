@@ -400,7 +400,7 @@ MonoBehaviour:
   - {fileID: 111757854}
   - {fileID: 89417044}
   _drawShader: {fileID: 4800000, guid: c3f08af49029d094b952b62e6c1a11a6, type: 3}
-  _brushSize: 31
+  _brushSize: 5
   _brushStrenght: 1
   _splatmap: {fileID: 0}
 --- !u!20 &657190081 stripped
