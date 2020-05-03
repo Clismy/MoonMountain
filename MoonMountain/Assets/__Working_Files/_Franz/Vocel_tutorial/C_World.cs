@@ -16,6 +16,8 @@ public class C_World : MonoBehaviour
     void Start()
     {
 
+
+
         data = new byte[worldX, worldY, worldZ];
 
         for (int x = 0; x < worldX; x++)

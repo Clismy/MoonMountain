@@ -5,10 +5,14 @@ using UnityEngine;
 public class C_Chunk : MonoBehaviour
 {
 
+    public Material baseMaterial;
 
+
+    public Shader snow_tack_shader;
     public bool update;
 
-    public int chunkSize = 16;
+    public float chunkSize = 0.5f;
+   // public int chunkSize = 16;
     public GameObject worldGO;
     private C_World world;
 
@@ -16,6 +20,9 @@ public class C_Chunk : MonoBehaviour
     public int chunkX;
     public int chunkY;
     public int chunkZ;
+
+
+
 
 
     private List<Vector3> newVertices = new List<Vector3>();
@@ -33,42 +40,44 @@ public class C_Chunk : MonoBehaviour
 
     private Vector2 tGrassTop = new Vector2(1, 1);
 
-    private void Start()
+
+
+
+    public RenderTexture _splatmap;
+    public RenderTexture getSetSplatMap
     {
-        mesh  = GetComponent<MeshFilter>().mesh;
-        col   = GetComponent<MeshCollider>();
-        world = worldGO.GetComponent("C_World") as C_World;
+        get
+        {
+            if (_splatmap == null)
+                _splatmap = new RenderTexture(1024, 1024, 0, RenderTextureFormat.ARGBFloat);
+            
+            return _splatmap;
+        }
+        set { _splatmap = value; }
+    }
+
+
+    void Start()
+    {
+
+
+        mesh = GetComponent<MeshFilter>().mesh;
+        col = GetComponent<MeshCollider>();
+          world = worldGO.GetComponent("C_World") as C_World;
+
+
+
+        
 
         GenerateMesh();
-
-
-
-  
+     
     }
 
-
-    void Cube(Vector2 texturePos)
-    {
-
-        newTriangles.Add(faceCount * 4); //1
-        newTriangles.Add(faceCount * 4 + 1); //2
-        newTriangles.Add(faceCount * 4 + 2); //3
-        newTriangles.Add(faceCount * 4); //1
-        newTriangles.Add(faceCount * 4 + 2); //3
-        newTriangles.Add(faceCount * 4 + 3); //4
-
-        newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y));
-        newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y + tUnit));
-        newUV.Add(new Vector2(tUnit * texturePos.x, tUnit * texturePos.y + tUnit));
-        newUV.Add(new Vector2(tUnit * texturePos.x, tUnit * texturePos.y));
-
-        faceCount++; // Add this line
-    }
-
-
-  
+    
     void LateUpdate()
     {
+
+
         if (update)
         {
             GenerateMesh();
@@ -78,7 +87,6 @@ public class C_Chunk : MonoBehaviour
 
     void UpdateMesh()
     {
-
         mesh.Clear();
         mesh.vertices = newVertices.ToArray();
         mesh.uv = newUV.ToArray();
@@ -227,6 +235,27 @@ public class C_Chunk : MonoBehaviour
         Cube(texturePos);
 
     }
+
+    void Cube(Vector2 texturePos)
+    {
+
+        newTriangles.Add(faceCount * 4); //1
+        newTriangles.Add(faceCount * 4 + 1); //2
+        newTriangles.Add(faceCount * 4 + 2); //3
+        newTriangles.Add(faceCount * 4); //1
+        newTriangles.Add(faceCount * 4 + 2); //3
+        newTriangles.Add(faceCount * 4 + 3); //4
+
+        newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y));
+        newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y + tUnit));
+        newUV.Add(new Vector2(tUnit * texturePos.x, tUnit * texturePos.y + tUnit));
+        newUV.Add(new Vector2(tUnit * texturePos.x, tUnit * texturePos.y));
+
+        faceCount++; // Add this line
+    }
+
+
+  
 
     byte Block(int x, int y, int z)
     {
