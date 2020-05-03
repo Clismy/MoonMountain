@@ -11,71 +11,65 @@ public class C_World : MonoBehaviour
 
     public GameObject chunk;
     public C_Chunk[,,] chunks;  //Changed from public GameObject[,,] chunks;
-    public C_Chunk[] chunkss;  //Changed from public GameObject[,,] chunks;
     public int chunkSize = 16;
 
     void Start()
     {
 
-        chunkss =  FindObjectsOfType(typeof(C_Chunk)) as C_Chunk[];
 
-        foreach(C_Chunk c in chunkss)
+
+        data = new byte[worldX, worldY, worldZ];
+
+        for (int x = 0; x < worldX; x++)
         {
-            c.GeneretNewMaterial();
+            for (int z = 0; z < worldZ; z++)
+            {
+                int stone = PerlinNoise(x, 0, z, 10, 3, 1.2f);
+                stone += PerlinNoise(x, 300, z, 20, 4, 0) + 10;
+                int dirt = PerlinNoise(x, 100, z, 50, 2, 0) + 1; //Added +1 to make sure minimum grass height is 1
+
+                for (int y = 0; y < worldY; y++)
+                {
+                    if (y <= stone)
+                    {
+                        data[x, y, z] = 1;
+                    }
+                    else if (y <= dirt + stone)
+                    { //Changed this line thanks to a comment
+                        data[x, y, z] = 2;
+                    }
+
+                }
+            }
         }
 
-        //data = new byte[worldX, worldY, worldZ];
 
-        //for (int x = 0; x < worldX; x++)
-        //{
-        //    for (int z = 0; z < worldZ; z++)
-        //    {
-        //        int stone = PerlinNoise(x, 0, z, 10, 3, 1.2f);
-        //        stone += PerlinNoise(x, 300, z, 20, 4, 0) + 10;
-        //        int dirt = PerlinNoise(x, 100, z, 50, 2, 0) + 1; //Added +1 to make sure minimum grass height is 1
+        chunks = new C_Chunk[Mathf.FloorToInt(worldX / chunkSize),
+        Mathf.FloorToInt(worldY / chunkSize), Mathf.FloorToInt(worldZ / chunkSize)];
 
-        //        for (int y = 0; y < worldY; y++)
-        //        {
-        //            if (y <= stone)
-        //            {
-        //                data[x, y, z] = 1;
-        //            }
-        //            else if (y <= dirt + stone)
-        //            { //Changed this line thanks to a comment
-        //                data[x, y, z] = 2;
-        //            }
+        for (int x = 0; x < chunks.GetLength(0); x++)
+        {
+            for (int y = 0; y < chunks.GetLength(1); y++)
+            {
+                for (int z = 0; z < chunks.GetLength(2); z++)
+                {
 
-        //        }
-        //    }
-        //}
+                    //Create a temporary Gameobject for the new chunk instead of using chunks[x,y,z]
+                    GameObject newChunk = Instantiate(chunk, new Vector3(x * chunkSize - 0.5f,
+                     y * chunkSize + 0.5f, z * chunkSize - 0.5f), new Quaternion(0, 0, 0, 0)) as GameObject;
 
+                    //Now instead of using a temporary variable for the script assign it
+                    //to chunks[x,y,z] and use it instead of the old \"newChunkScript\" 
+                    chunks[x, y, z] = newChunk.GetComponent("C_Chunk") as C_Chunk;
+                    chunks[x, y, z].worldGO = gameObject;
+                    chunks[x, y, z].chunkSize = chunkSize;
+                    chunks[x, y, z].chunkX = x * chunkSize;
+                    chunks[x, y, z].chunkY = y * chunkSize;
+                    chunks[x, y, z].chunkZ = z * chunkSize;
 
-        //chunks = new C_Chunk[Mathf.FloorToInt(worldX / chunkSize),
-        //Mathf.FloorToInt(worldY / chunkSize), Mathf.FloorToInt(worldZ / chunkSize)];
-
-        //for (int x = 0; x < chunks.GetLength(0); x++)
-        //{
-        //    for (int y = 0; y < chunks.GetLength(1); y++)
-        //    {
-        //        for (int z = 0; z < chunks.GetLength(2); z++)
-        //        {
-
-        //            //Create a temporary Gameobject for the new chunk instead of using chunks[x,y,z]
-        //            GameObject newChunk = Instantiate(chunk, new Vector3(x * chunkSize - 0.5f,
-        //             y * chunkSize + 0.5f, z * chunkSize - 0.5f), new Quaternion(0, 0, 0, 0)) as GameObject;
-
-        //            //Now instead of using a temporary variable for the script assign it
-        //            //to chunks[x,y,z] and use it instead of the old \"newChunkScript\" 
-        //            chunks[x, y, z] = newChunk.GetComponent("C_Chunk") as C_Chunk;
-        //            chunks[x, y, z].worldGO = gameObject;
-        //            chunks[x, y, z].chunkSize = chunkSize;
-        //            chunks[x, y, z].chunkX = x * chunkSize;
-        //            chunks[x, y, z].chunkY = y * chunkSize;
-        //            chunks[x, y, z].chunkZ = z * chunkSize;
-
-        //        }
-        //    }
-        //}
+                }
+            }
+        }
 
     }
 
