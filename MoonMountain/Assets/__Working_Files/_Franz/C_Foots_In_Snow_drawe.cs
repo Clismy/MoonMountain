@@ -43,7 +43,7 @@ public class C_Foots_In_Snow_drawe : MonoBehaviour
 
             Ray test = new Ray(hand.position, _camera.transform.forward);
           
-            if (Physics.Raycast(test,  out _hit, 0.5f))
+            if (Physics.Raycast(test,  out _hit, 0.5f,_layermask))
             {
                 C_Chunk3 c3 = _hit.transform.gameObject.GetComponent("C_Chunk3") as C_Chunk3;
 
