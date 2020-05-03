@@ -18,17 +18,17 @@ public class C_TerrainModifyer : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Debug.Log("herj");
-            ReplaceBlockCursor(0);
-        }
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    Debug.Log("herj");
+         //  ReplaceBlockCursor(0);
+        //}
 
-        if (Input.GetMouseButtonDown(1))
-        {
-            AddBlockCursor(1);
-        }
-        LoadChunks(GameObject.FindGameObjectWithTag("Player").transform.position, 32, 48);
+        //if (Input.GetMouseButtonDown(1))
+        //{
+        //    AddBlockCursor(1);
+        //}
+        //LoadChunks(GameObject.FindGameObjectWithTag("Player").transform.position, 32, 48);
     }
 
 
@@ -91,6 +91,8 @@ public class C_TerrainModifyer : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
+
+    
         if (Physics.Raycast(ray, out hit))
         {
             if(hit.transform.gameObject.GetComponent(typeof(C_Chunk3)) != null)

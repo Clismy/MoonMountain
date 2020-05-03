@@ -439,6 +439,7 @@ MonoBehaviour:
   _brushStrenght: 1
   walk_splatmap: {fileID: 0}
   draw_splatmap: {fileID: 0}
+  hand: {fileID: 4117298250102258623}
 --- !u!20 &657190081 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 3019880208004294948, guid: d219a256c5926f545b0f08786eb98714,
@@ -582,7 +583,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 835534422}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.84, y: 0.6, z: 2.6}
+  m_LocalPosition: {x: -6.84, y: 0.6, z: 19.33}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -818,7 +819,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1845266525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -935,7 +936,7 @@ PrefabInstance:
     - target: {fileID: 3019880208004294950, guid: d219a256c5926f545b0f08786eb98714,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3019880208486527632, guid: d219a256c5926f545b0f08786eb98714,
         type: 3}
@@ -1475,3 +1476,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 421c1bd671127904d8ee795280416b35, type: 3}
+--- !u!4 &4117298250102258623 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1439685002077300711, guid: 421c1bd671127904d8ee795280416b35,
+    type: 3}
+  m_PrefabInstance: {fileID: 4117298250102258622}
+  m_PrefabAsset: {fileID: 0}
