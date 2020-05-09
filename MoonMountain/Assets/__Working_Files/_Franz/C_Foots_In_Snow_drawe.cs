@@ -19,11 +19,8 @@ public class C_Foots_In_Snow_drawe : MonoBehaviour
     private Material _snowMaterial;
     private Material _drawMaterial;
     public RenderTexture walk_splatmap;
-    public RenderTexture draw_splatmap;
     private Camera _camera;
 
-
-    public Transform hand;
 
     void Start()
     {
@@ -35,77 +32,9 @@ public class C_Foots_In_Snow_drawe : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Mouse0))
-        {
-            if (_camera == null)
-                _camera = Camera.main;
+     
 
-
-            Ray test = new Ray(hand.position, _camera.transform.forward);
-          
-            if (Physics.Raycast(test,  out _hit, 0.5f,_layermask))
-            {
-                C_Chunk3 c3 = _hit.transform.gameObject.GetComponent("C_Chunk3") as C_Chunk3;
-
-                if (c3 != null)
-                {
-                   C_TerrainModifyer ter = c3.snoPileGo.transform.gameObject.GetComponent("C_TerrainModifyer") as C_TerrainModifyer;
-                    ter.ReplaceBlockAt(_hit, 0);
-                }
-
-            }
-
-        }
-
-
-        //if (Input.GetKey(KeyCode.Mouse0))
-        //{
-        //    if (_camera == null)
-        //        _camera = Camera.main;
-
-
-        //    if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out _hit))
-        //    {
-
-
-        //        if (draw_Curent_terrain == null)
-        //        {
-        //            draw_Curent_terrain = _hit.transform.gameObject.GetComponent("C_Chungk2") as C_Chungk2;
-        //            _snowMaterial = _hit.transform.gameObject.GetComponent<MeshRenderer>().material;
-        //            _snowMaterial.SetTexture("_Splat", draw_Curent_terrain.getSetSplatMap);
-        //            draw_splatmap = draw_Curent_terrain.getSetSplatMap;
-
-        //        }
-        //        else if (draw_Curent_terrain.gameObject != _hit.transform.gameObject)
-        //        {
-
-        //            draw_Curent_terrain.getSetSplatMap = draw_splatmap;
-
-
-        //            draw_Curent_terrain = _hit.transform.gameObject.GetComponent("C_Chungk2") as C_Chungk2;
-        //            _snowMaterial = draw_Curent_terrain.gameObject.GetComponent<MeshRenderer>().material;
-        //            _snowMaterial.SetTexture("_Splat", draw_Curent_terrain.getSetSplatMap);
-        //            draw_splatmap = draw_Curent_terrain.getSetSplatMap;
-        //        }
-
-        //        _drawMaterial.SetVector("_Coordinate", new Vector4(_hit.textureCoord.x, _hit.textureCoord.y, 0, 0));
-        //        _drawMaterial.SetFloat("_Strenght", _brushStrenght);
-        //        _drawMaterial.SetFloat("_Size", _brushSize);
-
-
-        //        RenderTexture temp = RenderTexture.GetTemporary(draw_splatmap.width, draw_splatmap.height, 0, RenderTextureFormat.ARGBFloat);
-        //        Graphics.Blit(draw_splatmap, temp);
-        //        Graphics.Blit(temp, draw_splatmap, _drawMaterial);
-        //        RenderTexture.ReleaseTemporary(temp);
-        //    }
-        //}
-
-
-
-
-
-
-
+     
         for (int i = 0, lengt = _wheel.Length; i < lengt; i++)
         {
             if (Physics.Raycast(_wheel[i].position, -Vector3.up, out _hit, 1f, _layermask))
