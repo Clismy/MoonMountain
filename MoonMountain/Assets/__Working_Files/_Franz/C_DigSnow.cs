@@ -17,6 +17,7 @@ public class C_DigSnow : MonoBehaviour
     public float _brushStrenght;
 
     private RaycastHit _hit;
+    private RaycastHit[] _hit_;
     private int      _layermask;
     private Material _snowMaterial;
     private Material      _drawMaterial;
@@ -60,20 +61,22 @@ public class C_DigSnow : MonoBehaviour
 
 
         Physics.SphereCast(digRay, radius, dist, _layermask);
-        
-        if (Physics.SphereCast(digRay, radius, out _hit, dist, _layermask))
+        _hit_ = Physics.SphereCastAll(digRay, radius, dist, _layermask);
+        // if (Physics.SphereCastAll(digRay, radius, out _hit, dist, _layermask))
+
+        foreach(RaycastHit rh in _hit_)
         {
 
- 
-            C_Chunk3 c3 = _hit.transform.gameObject.GetComponent("C_Chunk3") as C_Chunk3;
+       
+           C_Chunk3 c3 = rh.transform.gameObject.GetComponent("C_Chunk3") as C_Chunk3;
 
             if (c3 != null)
             {
                 C_TerrainModifyer ter = c3.snoPileGo.transform.gameObject.GetComponent("C_TerrainModifyer") as C_TerrainModifyer;
-                ter.ReplaceBlockAt(_hit, 0);
+                ter.ReplaceBlockAt(rh, 0);
             }
 
-            C_Chungk2 c2 = _hit.transform.gameObject.GetComponent("C_Chungk2") as C_Chungk2;
+            C_Chungk2 c2 = rh.transform.gameObject.GetComponent("C_Chungk2") as C_Chungk2;
             if (c2 != null)
             {
 
@@ -85,7 +88,7 @@ public class C_DigSnow : MonoBehaviour
                 _snowMaterial.SetTexture("_Splat", walk_Curent_terrain.getSetSplatMap);
                 walk_splatmap       = walk_Curent_terrain.getSetSplatMap;
 
-                _drawMaterial.SetVector("_Coordinate", new Vector4(_hit.textureCoord.x, _hit.textureCoord.y, 0, 0));
+                _drawMaterial.SetVector("_Coordinate", new Vector4(rh.textureCoord.x, rh.textureCoord.y, 0, 0));
                 _drawMaterial.SetFloat("_Strenght", _brushStrenght);
                 _drawMaterial.SetFloat("_Size", _brushSize);
 

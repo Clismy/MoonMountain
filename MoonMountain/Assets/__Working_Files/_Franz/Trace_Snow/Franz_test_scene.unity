@@ -521,11 +521,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df6d95e19b04bfb43a3587e11ff724d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldX: 8
-  worldY: 8
-  worldZ: 1
+  worldX: 16
+  worldY: 16
+  worldZ: 16
   chunk: {fileID: 157996371692249902, guid: 2fca0fb4288c1d24bba8053ebabab73e, type: 3}
-  chunkSize: 1
+  chunkSize: 16
+  cubeSize: 0.2
   chungL: 0
   datraL: 0
 --- !u!4 &835534424

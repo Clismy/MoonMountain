@@ -107,9 +107,13 @@ public class C_TerrainModifyer : MonoBehaviour
 
     public void ReplaceBlockAt(RaycastHit hit, byte block)
     {
+
+
+   
+
         //removes a block at these impact coordinates, you can raycast against the terrain and call this with the hit.point
         Vector3 position = hit.point;
-        position += (hit.normal * -0.5f);
+        position += ( hit.normal * -0.5f);
 
         SetBlockAt(position, block);
     }
@@ -127,9 +131,10 @@ public class C_TerrainModifyer : MonoBehaviour
     {
         //sets the specified block at these coordinates
 
-        int x = Mathf.RoundToInt(position.x - snoPile.transform.position.x);
-        int y = Mathf.RoundToInt(position.y - snoPile.transform.position.y);
-        int z = Mathf.RoundToInt(position.z - snoPile.transform.position.z);
+
+        int x = Mathf.RoundToInt((position.x - snoPile.transform.position.x) / snoPile.cubeSize);
+        int y = Mathf.RoundToInt((position.y - snoPile.transform.position.y) / snoPile.cubeSize);
+        int z = Mathf.RoundToInt((position.z - snoPile.transform.position.z) / snoPile.cubeSize);
 
         SetBlockAt(x, y, z, block);
     }
@@ -139,8 +144,9 @@ public class C_TerrainModifyer : MonoBehaviour
 
         print("Adding: " + x + ", " + y + ", " + z);
 
-
         snoPile.data[x, y, z] = block;
+
+
         UpdateChunkAt(x, y, z);
     }
 
@@ -152,39 +158,66 @@ public class C_TerrainModifyer : MonoBehaviour
         int updateY = Mathf.FloorToInt(y / snoPile.chunkSize);
         int updateZ = Mathf.FloorToInt(z / snoPile.chunkSize);
 
-        print("Updating: \" + updateX + \", \" + updateY + \", \" + updateZ");
+        print("Updating: " + updateX + ", " + updateY + ", " + updateZ);
 
 
         snoPile.chunks[updateX, updateY, updateZ].update = true;
+        //if ( updateX != 0)
+        //    snoPile.chunks[updateX - 1, updateY, updateZ].update = true;
+
+        //if ( updateX != snoPile.chunks.GetLength(0) - 1)
+        //    snoPile.chunks[updateX + 1, updateY, updateZ].update = true;
+
+
+        //if (updateY != 0)
+        //    snoPile.chunks[updateX, updateY - 1, updateZ].update = true;
+
+        //if (updateY != snoPile.chunks.GetLength(1) - 1)
+        //    snoPile.chunks[updateX, updateY + 1, updateZ].update = true;
+
+
+        //if ( updateZ != 0)
+        //    snoPile.chunks[updateX, updateY, updateZ - 1].update = true;
+
+
+        //if (updateZ != snoPile.chunks.GetLength(2) - 1)
+
+        //    snoPile.chunks[updateX, updateY, updateZ + 1].update = true;
 
 
         if (x - (snoPile.chunkSize * updateX) == 0 && updateX != 0)
         {
+            Debug.Log("1)))))))))))))");
             snoPile.chunks[updateX - 1, updateY, updateZ].update = true;
         }
 
         if (x - (snoPile.chunkSize * updateX) == 15 && updateX != snoPile.chunks.GetLength(0) - 1)
         {
+            Debug.Log("2)))))))))))))");
             snoPile.chunks[updateX + 1, updateY, updateZ].update = true;
         }
 
         if (y - (snoPile.chunkSize * updateY) == 0 && updateY != 0)
         {
+            Debug.Log("3)))))))))))))");
             snoPile.chunks[updateX, updateY - 1, updateZ].update = true;
         }
 
         if (y - (snoPile.chunkSize * updateY) == 15 && updateY != snoPile.chunks.GetLength(1) - 1)
         {
+            Debug.Log("4)))))))))))))");
             snoPile.chunks[updateX, updateY + 1, updateZ].update = true;
         }
 
         if (z - (snoPile.chunkSize * updateZ) == 0 && updateZ != 0)
         {
+            Debug.Log("4)))))))))))))");
             snoPile.chunks[updateX, updateY, updateZ - 1].update = true;
         }
 
         if (z - (snoPile.chunkSize * updateZ) == 15 && updateZ != snoPile.chunks.GetLength(2) - 1)
         {
+            Debug.Log("6)))))))))))))");
             snoPile.chunks[updateX, updateY, updateZ + 1].update = true;
         }
 
@@ -199,8 +232,11 @@ public class C_TerrainModifyer : MonoBehaviour
             for (int z = 0; z < snoPile.chunks.GetLength(2); z++)
             {
 
-                float dist = Vector2.Distance(new Vector2(x * snoPile.chunkSize,
-                z * snoPile.chunkSize), new Vector2(playerPos.x, playerPos.z));
+                float dist = Vector2.Distance(
+                                            new Vector2(
+                                                        x *  snoPile.chunkSize,
+                                                        z * snoPile.chunkSize), 
+                                            new Vector2(playerPos.x, playerPos.z));
 
                 if (dist < distToLoad)
                 {
