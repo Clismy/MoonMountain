@@ -32,7 +32,9 @@ public class TextureData : UpdatableData {
 		savedMaxHeight = maxHeight;
 
 		material.SetFloat ("minHeight", minHeight);
-		material.SetFloat ("maxHeight", maxHeight);
+		material.SetFloat ("maxHeight", maxHeight);		
+		material.SetFloat ("Vector1_9CA7E8AF", minHeight);
+		material.SetFloat ("Vector1_12BCB1B0", maxHeight);
 	}
 
 	Texture2DArray GenerateTextureArray(Texture2D[] textures) {
