@@ -132,9 +132,9 @@ public class C_TerrainModifyer : MonoBehaviour
         //sets the specified block at these coordinates
 
 
-        int x = Mathf.RoundToInt((position.x - snoPile.transform.position.x) / snoPile.cubeSize);
-        int y = Mathf.RoundToInt((position.y - snoPile.transform.position.y) / snoPile.cubeSize);
-        int z = Mathf.RoundToInt((position.z - snoPile.transform.position.z) / snoPile.cubeSize);
+        int x = Mathf.RoundToInt((position.x - snoPile.transform.position.x)  / snoPile.cubeSize);
+        int y = Mathf.RoundToInt((position.y - snoPile.transform.position.y)  / snoPile.cubeSize);
+        int z = Mathf.RoundToInt((position.z  - snoPile.transform.position.z) / snoPile.cubeSize);
 
         SetBlockAt(x, y, z, block);
     }

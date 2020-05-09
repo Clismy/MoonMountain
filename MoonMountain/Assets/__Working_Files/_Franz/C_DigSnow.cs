@@ -34,7 +34,7 @@ public class C_DigSnow : MonoBehaviour
         _layermask = LayerMask.GetMask("SnowFloor");
         _drawMaterial = new Material(_drawShader);
     }
-
+    private float size = 0.4f, jum = 0.2f;
 
     // Update is called once per frame
     void Update()
@@ -51,7 +51,28 @@ public class C_DigSnow : MonoBehaviour
 
 
 
+            for (float i = -size; i < size; i += jum)
+            {
+
+
+
+                for (float j = -size; j < size; j += jum)
+                {
+
+                    digRay = new Ray(_camera.transform.position + new Vector3(i + 0.5f, j - 0.5f, 0), _camera.transform.forward);
+                    Debug.DrawRay(digRay.origin, digRay.direction * dist, Color.blue);
+                
+
+                }
+
+
+
+
+
+            }
         }
+
+
     }
 
     public void DigNow()
@@ -64,7 +85,49 @@ public class C_DigSnow : MonoBehaviour
         _hit_ = Physics.SphereCastAll(digRay, radius, dist, _layermask);
         // if (Physics.SphereCastAll(digRay, radius, out _hit, dist, _layermask))
 
-        foreach(RaycastHit rh in _hit_)
+
+
+        List<RaycastHit> hits = new List<RaycastHit>();
+
+       
+        for(float i = -size; i < size; i += jum)
+        {
+
+
+
+            for (float j = -size; j < size; j += jum)
+            {
+
+                digRay = new Ray(_camera.transform.position+new Vector3(i+0.5f,j-0.5f,0), _camera.transform.forward);
+                Debug.DrawRay(digRay.origin, digRay.direction * dist, Color.green);
+                //RaycastHit hitt;
+
+                RaycastHit[] tesmp = Physics.RaycastAll(digRay, dist, _layermask);
+
+                foreach(RaycastHit rh in tesmp)
+                {
+                    hits.Add(rh);
+                }
+
+                //if (Physics.Raycast(digRay, out hitt, dist, _layermask))
+                //{
+                //    hits.Add(hitt);
+                //    Debug.DrawRay(digRay.origin, digRay.direction * dist, Color.green);
+                //}
+                //else
+                //    Debug.DrawRay(digRay.origin, digRay.direction * dist, Color.red);
+
+
+            }
+
+
+
+
+
+        }
+
+
+        foreach(RaycastHit rh in hits)
         {
 
        

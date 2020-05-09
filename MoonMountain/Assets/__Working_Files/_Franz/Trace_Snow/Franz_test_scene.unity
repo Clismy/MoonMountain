@@ -521,12 +521,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df6d95e19b04bfb43a3587e11ff724d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldX: 16
-  worldY: 16
-  worldZ: 16
+  worldX: 8
+  worldY: 8
+  worldZ: 8
   chunk: {fileID: 157996371692249902, guid: 2fca0fb4288c1d24bba8053ebabab73e, type: 3}
-  chunkSize: 16
-  cubeSize: 0.2
+  chunkSize: 8
+  cubeSize: 1
   chungL: 0
   datraL: 0
 --- !u!4 &835534424
@@ -1368,7 +1368,7 @@ PrefabInstance:
     - target: {fileID: 62386170069133431, guid: 421c1bd671127904d8ee795280416b35,
         type: 3}
       propertyPath: dist
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 137036202687642125, guid: 421c1bd671127904d8ee795280416b35,
         type: 3}

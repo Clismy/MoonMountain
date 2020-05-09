@@ -42,7 +42,7 @@ public class C_SnowPile : MonoBehaviour
 
 
         chunks = new C_Chunk3[Mathf.FloorToInt(worldX / chunkSize),
-        Mathf.FloorToInt(worldY / chunkSize), Mathf.FloorToInt(worldZ / chunkSize)];
+        Mathf.FloorToInt(worldY / chunkSize), Mathf.FloorToInt((worldZ / chunkSize))];
 
         Debug.Log(" hej " +chunks.GetLength(0) + "  " + chunks.GetLength(1) + "  " + chunks.GetLength(2));
 
