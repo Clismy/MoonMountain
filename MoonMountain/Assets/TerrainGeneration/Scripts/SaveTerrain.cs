@@ -19,7 +19,6 @@ public class SaveTerrain : MonoBehaviour
 
     void SaveAsset()
     {
-        GameObject terrainChunckObject;
         Mesh terrainChunckMesh;
 
         for (int i = 0; i < selectedGameObject.Length; i++)
@@ -27,28 +26,18 @@ public class SaveTerrain : MonoBehaviour
             MeshFilter mf = selectedGameObject[i].transform.GetComponent<MeshFilter>();
             if (mf != null)
             {
-                string terrainChunk = "Assets/Resources/SavedMeshes/GameObjects/TerrainChunk (" + i + ").prefab";
-                PrefabUtility.SaveAsPrefabAsset(selectedGameObject[i], terrainChunk);
                 string savePath = "Assets/Resources/SavedMeshes/Meshes/TerrainMesh (" + i + ").asset";
-                Debug.Log("Saved Mesh to:" + savePath);
                 AssetDatabase.CreateAsset(mf.mesh, savePath);
+                string terrainChunk = "Assets/Resources/SavedMeshes/GameObjects/TerrainChunk (" + i + ").prefab";
+                terrainChunckMesh = Resources.Load<Mesh>("SavedMeshes/Meshes/TerrainMesh (" + i + ")");
+                selectedGameObject[i].GetComponent<MeshFilter>().sharedMesh = terrainChunckMesh;
+                selectedGameObject[i].GetComponent<MeshCollider>().sharedMesh = terrainChunckMesh;
+                PrefabUtility.SaveAsPrefabAsset(selectedGameObject[i], terrainChunk);
             }
             else
             {
                 Debug.Log("Didn't save terrain asset number " + i);
             }
-
-            terrainChunckObject = Resources.Load<GameObject>("SavedMeshes/GameObjects/TerrainChunk (" + i + ")");
-            terrainChunckMesh = Resources.Load<Mesh>("SavedMeshes/Meshes/TerrainMesh (" + i + ")");
-            if(terrainChunckObject == null)
-            {
-                Debug.Log("no gameobject");
-            }
-            if (terrainChunckMesh == null)
-            {
-                Debug.Log("no mesh");
-            }
-            terrainChunckObject.GetComponent<MeshFilter>().mesh = terrainChunckMesh;
         }
     }
 }
