@@ -60,21 +60,13 @@ namespace CMF
 
         void SmoothUpdate()
         {
-            Quaternion rot;
             if (rotateTowardsCamera)
             {
-                Vector3 forward = target.forward;
-                forward.y = 0;
-
-                rot = Quaternion.LookRotation(forward, Vector3.up);
-            }
-            else
-            {
-                rot = target.rotation;
+                currentRotation = Quaternion.Euler(0f, target.localEulerAngles.y, 0f);
             }
 
             //Smooth current rotation;
-            currentRotation = Smooth(currentRotation, rot, smoothSpeed);
+            currentRotation = Smooth(currentRotation, target.rotation, smoothSpeed);
 
             //Set rotation;
             tr.rotation = currentRotation;

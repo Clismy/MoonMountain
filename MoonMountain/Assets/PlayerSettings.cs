@@ -33,7 +33,7 @@ public class PlayerSettings : MonoBehaviour
     [Space]
     [SerializeField] float speed;
 
-    bool crounhing = false;
+    public bool crounhing = false;
 
     Mover mover;
     AdvancedWalkerController aW;
