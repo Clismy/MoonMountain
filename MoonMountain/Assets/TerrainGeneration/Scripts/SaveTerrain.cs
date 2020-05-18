@@ -6,6 +6,7 @@ using UnityEditor;
 public class SaveTerrain : MonoBehaviour
 {
     public KeyCode saveKey = KeyCode.F12;
+    public KeyCode saveKey1 = KeyCode.F11;
     public string saveName = "SavedMesh";
     public GameObject[] selectedGameObject;
 
@@ -14,6 +15,10 @@ public class SaveTerrain : MonoBehaviour
         if (Input.GetKeyDown(saveKey))
         {
             SaveAsset();
+        }        
+        if (Input.GetKeyDown(saveKey1))
+        {
+            SaveMaterial();
         }
     }
 
@@ -37,6 +42,21 @@ public class SaveTerrain : MonoBehaviour
             else
             {
                 Debug.Log("Didn't save terrain asset number " + i);
+            }
+        }
+    }
+
+    void SaveMaterial()
+    {
+        MeshRenderer mr;
+
+        for (int i = 0; i < selectedGameObject.Length; i++)
+        {
+            mr = selectedGameObject[i].transform.GetComponent<MeshRenderer>();
+            if(mr != null)
+            {
+                string savePath = "Assets/Resources/SavedMeshes/Materials/TerrainMaterial (" + i + ").asset";
+                AssetDatabase.CreateAsset(mr.material, savePath);
             }
         }
     }
