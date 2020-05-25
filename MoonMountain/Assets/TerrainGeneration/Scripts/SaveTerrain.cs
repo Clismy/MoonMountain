@@ -9,6 +9,7 @@ public class SaveTerrain : MonoBehaviour
     public KeyCode saveKey1 = KeyCode.F11;
     public string saveName = "SavedMesh";
     public GameObject[] selectedGameObject;
+    public Texture defaultTexture;
 
     void Update()
     {
@@ -56,7 +57,15 @@ public class SaveTerrain : MonoBehaviour
             if(mr != null)
             {
                 string savePath = "Assets/Resources/SavedMeshes/Materials/TerrainMaterial (" + i + ").asset";
-                AssetDatabase.CreateAsset(mr.material, savePath);
+                Debug.Log(mr.material.mainTexture.name);
+                Texture texTest = mr.material.GetTexture("_Color");
+                Material matTest = new Material(Shader.Find("Shader Graphs/ApplyGeneratedTexture"));
+                matTest.SetTexture("Texture2D_47F2ECFB", texTest);
+
+                mr.material = matTest;
+                //mr.sharedMaterial.SetTexture("texTest", texTest);
+                //AssetDatabase.CreateAsset(matTest, savePath);
+                //var tex = new Texture2D(mr.sharedMaterial.mainTexture.width, mr.sharedMaterial.mainTexture.height); tex.SetPixels32(proceduralTexture.GetPixels32()); tex.Apply(false); File.WriteAllBytes(savePath, tex.EncodeToPNG());
             }
         }
     }
