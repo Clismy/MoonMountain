@@ -9,7 +9,7 @@ public class C_Foots_In_Snow_drawe : MonoBehaviour
     public C_Chungk2 draw_Curent_terrain;
     public Transform[] _wheel;
     public Shader _drawShader;
-    [Range(1, 500)]
+    [Range(0.000001f, 10)]
     public float _brushSize;
     [Range(0, 1)]
     public float _brushStrenght;
