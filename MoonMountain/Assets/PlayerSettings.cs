@@ -11,7 +11,7 @@ public class PlayerSettings : MonoBehaviour
     public Camera cameraForwardPos;
     public float crouchHeight;
     public float crouchForward;
-    public bool doOnce = true;
+    public bool  doOnce = true;
 
     [SerializeField] float standingHeight;
     [SerializeField] float crounchingHeight;
@@ -40,6 +40,7 @@ public class PlayerSettings : MonoBehaviour
 
     float cruncheCamerOffset = 0f; 
 
+
     float originalJumpSpeed;
     float newJumpingSpeed;
 
@@ -48,9 +49,9 @@ public class PlayerSettings : MonoBehaviour
 
     public bool crounhing = false;
 
-    Mover mover;
+    Mover                    mover;
     AdvancedWalkerController aW;
-    CapsuleCollider cC;
+    CapsuleCollider          cC;
 
     private void Awake()
     {
@@ -60,13 +61,13 @@ public class PlayerSettings : MonoBehaviour
     void Start()
     {
         mover = GetComponent<Mover>();
-        aW = GetComponent<AdvancedWalkerController>();
-        cC = GetComponent<CapsuleCollider>();
+        aW    = GetComponent<AdvancedWalkerController>();
+        cC    = GetComponent<CapsuleCollider>();
 
         crounhing = false;
 
         originalJumpSpeed = aW.jumpSpeed;
-        heightVec = gameObject.transform.position;
+        heightVec         = gameObject.transform.position;
     }
 
     void Update()
@@ -81,8 +82,8 @@ public class PlayerSettings : MonoBehaviour
             crounhing = true;
         }
 
-        float h = crounhing ? crounchingHeight : standingHeight;
-        height = Mathf.MoveTowards(height, h, Time.deltaTime * speed);
+        float h              = crounhing ? crounchingHeight : standingHeight;
+        height               = Mathf.MoveTowards(height, h, Time.deltaTime * speed);
         mover.colliderHeight = height;
 
         //if (crounhing)
@@ -106,17 +107,17 @@ public class PlayerSettings : MonoBehaviour
 
 
 //========================================================================================================================
- //Franz gjorde denna ändraing för att övergången mellan crunch och stand skulle bli mjukare        if (crounhing)
-        if (doOnce)
+        //Franz gjorde denna ändraing för att övergången mellan crunch och stand skulle bli mjukare        
+        if (crounhing && doOnce)
             {
                 camVecOrg = new Vector3(0, 0, Camera.main.transform.position.z);
-                camVec = Camera.main.transform.position;
-                doOnce = false;
+                camVec    = Camera.main.transform.position;
+                doOnce    = false;
             }
      
 
-        float ccy = (crounhing ? crouchHeight : 0);
-        cruncheCamerOffset = Mathf.MoveTowards(cruncheCamerOffset, ccy, Time.deltaTime * speed);
+        float ccy                          = (crounhing ? crouchHeight : 0);
+        cruncheCamerOffset                 = Mathf.MoveTowards(cruncheCamerOffset, ccy, Time.deltaTime * speed);
         cameraHeightPos.transform.position = new Vector3(cameraHeightPos.transform.position.x, cameraHeightPos.transform.position.y - cruncheCamerOffset, cameraHeightPos.transform.position.z);
 //======================================================================================================================== 
        
@@ -125,12 +126,12 @@ public class PlayerSettings : MonoBehaviour
         //heightVec = Vector3.MoveTowards(heightVec, h1, Time.deltaTime * speed);
         //cameraHeightPos.transform.position = heightVec;
 
-        float o = crounhing ? crounchingOffset : standingOffset;
-        offset = Mathf.MoveTowards(offset, o, Time.deltaTime * speed);
+        float o                = crounhing ? crounchingOffset : standingOffset;
+        offset                 = Mathf.MoveTowards(offset, o, Time.deltaTime * speed);
         mover.colliderOffset.y = offset;
 
         float ccH = crounhing ? realCrounchingHeight : realStandingHeight;
-        cCHeight = Mathf.MoveTowards(cCHeight, ccH, Time.deltaTime * speed);
+        cCHeight  = Mathf.MoveTowards(cCHeight, ccH, Time.deltaTime * speed);
         cC.height = cCHeight;
 
         aW.jumpSpeed = crounhing ? 0f : originalJumpSpeed;
