@@ -11,8 +11,8 @@ public class C_SnowPile : MonoBehaviour
 
     public GameObject chunk;
     public C_Chunk3[,,] chunks;  //Changed from public GameObject[,,] chunks;
-    public int chunkSize = 16;
-
+    private int chunksize = 1;
+    public int chunkSize { get { return chunksize; } }
     public int chungL;
     public int datraL;
     void Start()
@@ -144,13 +144,36 @@ public class C_SnowPile : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        float centerX = transform.position.x -chunkSize* 0.38f;
-        float centerY = transform.position.y -chunkSize *0.5f;
-        float centerZ = transform.position.z -chunkSize * 0.38f;
+        //attemp 1 faile
+        //float centerX = transform.position.x -chunkSize* 0.38f;
+        //float centerY = transform.position.y -chunkSize *0.5f;
+        //float centerZ = transform.position.z -chunkSize * 0.38f;
+        //Gizmos.DrawWireCube(new Vector3(centerX, centerY, centerZ), new Vector3(worldX, worldY, worldZ) * chunkSize* 0.25f);
 
+        //attemp 2 faile
+        //float centerX = transform.position.x + (chunkSize*0.5f)* (worldX-1);
+        //float centerY = transform.position.y + (chunkSize * 0.5f) * (worldY - 1);
+        //float centerZ = transform.position.z;
+        //Gizmos.DrawWireCube(new Vector3(centerX, centerY, centerZ), new Vector3(worldX, worldY, worldZ) * chunkSize );
 
+        Gizmos.color   = Color.cyan;
+        float cCenterX = transform.position.x;
+        float cCenterY = transform.position.y;
+        float cCenterZ = transform.position.z;
 
-        Gizmos.DrawWireCube(new Vector3(centerX, centerY, centerZ), new Vector3(worldX, worldY, worldZ) * chunkSize* 0.25f);
+        for (int x = 0; x < worldX; ++x){
+            for (int y = 0; y < worldY; ++y){
+                for (int z = 0; z < worldZ; ++z){
+                    Gizmos.DrawWireCube(new Vector3(cCenterX, cCenterY, cCenterZ), new Vector3(chunkSize, chunkSize, chunkSize));
+                    cCenterZ += (chunkSize);// * 0.5f);  
+                }
+                cCenterZ = transform.position.z;
+                cCenterY += (chunkSize);// * 0.5f);
+            }
+            cCenterY = transform.position.y;
+            cCenterX += (chunkSize);// * 0.5f);
+        }
+
     }
 
 
