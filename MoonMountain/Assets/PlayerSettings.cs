@@ -5,6 +5,14 @@ using CMF;
 
 public class PlayerSettings : MonoBehaviour
 {
+    [Header("CrouchSettings")]
+    public KeyCode crouchKey = KeyCode.LeftControl;
+    public GameObject cameraHeightPos;
+    public Camera cameraForwardPos;
+    public float crouchHeight;
+    public float crouchForward;
+    public bool doOnce = true;
+
     [SerializeField] float standingHeight;
     [SerializeField] float crounchingHeight;
 
@@ -23,7 +31,10 @@ public class PlayerSettings : MonoBehaviour
     [Space]
     public float ceilingAngleLimit = 10f;
 
-    float height = 0f;
+    Vector3 heightVec;
+    Vector3 camVec;
+    Vector3 camVecOrg;
+    float height;
     float offset = 0f;
     float cCHeight = 0f;
 
@@ -39,6 +50,11 @@ public class PlayerSettings : MonoBehaviour
     AdvancedWalkerController aW;
     CapsuleCollider cC;
 
+    private void Awake()
+    {
+        camVecOrg = new Vector3(0, 0, cameraForwardPos.transform.position.z);
+    }
+
     void Start()
     {
         mover = GetComponent<Mover>();
@@ -48,11 +64,12 @@ public class PlayerSettings : MonoBehaviour
         crounhing = false;
 
         originalJumpSpeed = aW.jumpSpeed;
+        heightVec = gameObject.transform.position;
     }
 
     void Update()
     {
-        if (Input.GetButtonDown("Crounching"))
+        if (Input.GetKeyDown(crouchKey))
         {
             crounhing = !crounhing;
         }
@@ -65,6 +82,28 @@ public class PlayerSettings : MonoBehaviour
         float h = crounhing ? crounchingHeight : standingHeight;
         height = Mathf.MoveTowards(height, h, Time.deltaTime * speed);
         mover.colliderHeight = height;
+
+        if (crounhing)
+        {
+            if (doOnce)
+            {
+                camVecOrg = new Vector3(0, 0, Camera.main.transform.position.z);
+                camVec = Camera.main.transform.position;
+                doOnce = false;
+            }
+            cameraHeightPos.transform.position = new Vector3(cameraHeightPos.transform.position.x, cameraHeightPos.transform.position.y - crouchHeight, cameraHeightPos.transform.position.z);
+            //cameraForwardPos.transform.position = camVec;
+        }
+        else
+        {
+            cameraHeightPos.transform.position = new Vector3(cameraHeightPos.transform.position.x, cameraHeightPos.transform.position.y, cameraHeightPos.transform.position.z);
+            //cameraForwardPos.transform.position = camVecOrg;
+        }
+
+        //Vector3 h1 = crounhing ? new Vector3(cameraHeightPos.transform.position.x, gameObject.transform.position.y + crounchingHeight, cameraHeightPos.transform.position.z) :
+        //    new Vector3(cameraHeightPos.transform.position.x, gameObject.transform.position.y + standingHeight, cameraHeightPos.transform.position.z);
+        //heightVec = Vector3.MoveTowards(heightVec, h1, Time.deltaTime * speed);
+        //cameraHeightPos.transform.position = heightVec;
 
         float o = crounhing ? crounchingOffset : standingOffset;
         offset = Mathf.MoveTowards(offset, o, Time.deltaTime * speed);

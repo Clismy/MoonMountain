@@ -294,7 +294,7 @@ namespace CMF
 			float _distanceToGo = _middle - _distance;
 
 			//Set new ground adjustment velocity for the next frame;
-			currentGroundAdjustmentVelocity = tr.up * (_distanceToGo/Time.fixedDeltaTime);
+			//currentGroundAdjustmentVelocity = tr.up * (_distanceToGo/Time.fixedDeltaTime);
 		}
 
 		//Check if mover is grounded;
