@@ -8,11 +8,12 @@ namespace CMF
     public class CharacterKeyboardInput : CharacterInput
     {
 		public string horizontalInputAxis = "Horizontal";
-		public string verticalInputAxis = "Vertical";
-		public KeyCode jumpKey = KeyCode.Space;
+		public string verticalInputAxis   = "Vertical";
+		public KeyCode jumpKey            = KeyCode.Space;
+        public KeyCode crouchKey          = KeyCode.LeftControl;
 
-		//If this is enabled, Unity's internal input smoothing is bypassed;
-		public bool useRawInput = true;
+        //If this is enabled, Unity's internal input smoothing is bypassed;
+        public bool useRawInput = true;
 
         public override float GetHorizontalMovementInput()
 		{
@@ -34,5 +35,8 @@ namespace CMF
 		{
 			return Input.GetKey(jumpKey);
 		}
+
+
+
     }
 }

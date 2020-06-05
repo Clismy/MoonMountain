@@ -13,5 +13,6 @@ namespace CMF
         public abstract float GetVerticalMovementInput();
 
         public abstract bool IsJumpKeyPressed();
+
     }
 }

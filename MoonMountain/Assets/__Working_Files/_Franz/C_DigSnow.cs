@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class C_DigSnow : MonoBehaviour
 {
+
+    public KeyCode DigKey = KeyCode.Mouse0;
     public Transform hand;
 
-    public Animation dig;
+
+    public bool isDiging = false;
+
+    Animator anim;
 
     //  public GameObject  _terrain;
     public C_Chungk2 walk_Curent_terrain;
@@ -27,9 +32,11 @@ public class C_DigSnow : MonoBehaviour
     public float radius;
     public float dist;
 
+    private const string animationBoolKey_Diging = "Dig 0";
 
     void Start()
     {
+        anim = GetComponent<Animator>(); 
         _layermask = LayerMask.GetMask("SnowFloor");
         _drawMaterial = new Material(_drawShader);
     }
@@ -38,27 +45,30 @@ public class C_DigSnow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Mouse0))
+
+        isDiging = false;
+        if (Input.GetKey(DigKey))
         {
-
-            if (!dig.IsPlaying("Gräv"))
-                dig.Play();
-
+          
+            isDiging = true;
 
             if (_camera == null)
                 _camera = Camera.main;
 
-
-
+ 
+          
         }
+        anim.SetBool(animationBoolKey_Diging, isDiging);
     }
 
     public void DigNow()
     {
       //  _camera.ScreenPointToRay(Input.mousePosition)
         digRay = new Ray(_camera.transform.position , _camera.transform.forward);//new Ray(hand.position- _camera.transform.forward*dist*0.5f, _camera.transform.forward);
+        Debug.DrawRay(digRay.origin, digRay.direction);
 
 
+ 
         Physics.SphereCast(digRay, radius, dist, _layermask);
         
         if (Physics.SphereCast(digRay, radius, out _hit, dist, _layermask))
